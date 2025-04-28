@@ -1,0 +1,206 @@
+<div class="row">
+  <div class="col-12">
+    <div class="themed-jumbotron">
+      <h1 class="mb-4">LocalStorage Demo</h1>
+      <p class="lead">
+        LocalStorage is a web browser feature that allows websites to store data as key-value pairs in your browser.
+        Unlike cookies, this data has no expiration time and will persist even after you close the browser.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-sliders me-2"></i>Game Settings
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>Settings are preferences that users can customize and save for future visits.</p>
+        
+        <form id="settingsForm">
+          <div class="mb-3">
+            <label for="difficulty" class="form-label">Difficulty</label>
+            <select class="form-select" id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="volume" class="form-label">Volume (0-100)</label>
+            <input type="range" class="form-range" id="volume" min="0" max="100" step="1">
+            <div class="d-flex justify-content-between">
+              <small>Off</small>
+              <small>Max</small>
+            </div>
+          </div>
+          
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="notifications">
+            <label class="form-check-label" for="notifications">Enable notifications</label>
+          </div>
+          
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary" onclick="saveSettings()">
+              <i class="fas fa-save me-2"></i>Save Settings
+            </button>
+            <button type="button" class="btn btn-outline-secondary" onclick="resetSettings()">
+              <i class="fas fa-undo me-2"></i>Reset to Default
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-trophy me-2"></i>High Scores
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>High scores demonstrate how to store and retrieve arrays of objects in localStorage.</p>
+        
+        <div class="table-responsive mb-3">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Level</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="highScoresTable">
+              <!-- High scores will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Add new high score form -->
+        <form id="highScoreForm" class="mb-3">
+          <div class="row g-2">
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="playerName" placeholder="Player name" required>
+            </div>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="score" placeholder="Score" min="0" required>
+            </div>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="level" placeholder="Level" min="1" max="10" required>
+            </div>
+            <div class="col-sm-2">
+              <button type="button" class="btn btn-success w-100" onclick="saveHighScore()">Add</button>
+            </div>
+          </div>
+        </form>
+        
+        <button type="button" class="btn btn-outline-danger" onclick="clearHighScores()">
+          <i class="fas fa-trash me-2"></i>Clear All Scores
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Theme selector demo section -->
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-paint-brush me-2"></i>Theme Preferences
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>The theme switcher at the top of the page demonstrates how localStorage can be used to remember user preferences.</p>
+        <p>When you select a theme, your choice is saved to localStorage and will be automatically applied when you return to the site.</p>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header bg-secondary text-white">
+                <h3 class="h6 mb-0">Current localStorage Value</h3>
+              </div>
+              <div class="card-body">
+                <pre class="mb-0 p-3 bg-light rounded"><code id="theme-localStorage-debug">Loading...</code></pre>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header bg-secondary text-white">
+                <h3 class="h6 mb-0">Theme Controls</h3>
+              </div>
+              <div class="card-body">
+                <p>You can also reset the theme preference:</p>
+                <button class="btn btn-outline-secondary" onclick="resetTheme()">
+                  <i class="fas fa-undo me-2"></i>Reset Theme Preference
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-code me-2"></i>How It Works
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>LocalStorage is part of the Web Storage API and provides methods to store data in the browser:</p>
+        
+        <div class="mt-3">
+          <pre class="p-3 bg-light rounded"><code>// Save data
+localStorage.setItem('key', 'value');
+
+// Get data
+const value = localStorage.getItem('key');
+
+// Remove data
+localStorage.removeItem('key');
+
+// Clear all data
+localStorage.clear();</code></pre>
+        </div>
+        
+        <p class="mt-3">Key features of localStorage:</p>
+        <ul>
+          <li>Data persists even when the browser is closed</li>
+          <li>Storage limit is typically 5-10MB</li>
+          <li>Data is stored as strings (objects/arrays must be converted using JSON.stringify())</li>
+          <li>Only works with strings (use JSON.parse() to convert back to objects/arrays)</li>
+          <li>Storage is domain-specific (each website has its own storage area)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast for notifications -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Web Storage Explorer</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <!-- Toast message content will be set by JS -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div class="row">
+  <div class="col-12">
+    <div class="themed-jumbotron">
+      <h1 class="mb-4">Web Storage Quiz</h1>
+      <p class="lead">
+        Test your knowledge about web storage methods including JSON files, sessions, localStorage, cookies, 
+        and API integration. Your progress will be saved in your session, so you can continue 
+        where you left off even if you navigate away from this page.
+      </p>
+      <p>This quiz now includes 12 questions covering all the storage methods demonstrated in this application!</p>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-8 offset-md-2">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-question-circle me-2"></i>Quiz Progress
+        </h2>
+        {{#if quizStarted}}
+          <span class="badge bg-primary">Question {{currentQuestion}} of {{totalQuestions}}</span>
+        {{/if}}
+      </div>
+      <div class="card-body">
+        {{#if quizComplete}}
+          <!-- Quiz completion screen -->
+          <div class="text-center py-4">
+            <i class="fas fa-trophy text-warning mb-3" style="font-size: 3rem;"></i>
+            <h3>Congratulations!</h3>
+            <p class="lead">You completed the quiz with a score of:</p>
+            <div class="display-4 mb-3">{{score}} / {{totalQuestions}}</div>
+            <p>{{feedbackMessage}}</p>
+            
+            <div class="mt-4">
+              <a href="/quiz/restart" class="btn btn-primary">
+                <i class="fas fa-redo me-2"></i>Restart Quiz
+              </a>
+              <a href="/" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-home me-2"></i>Return Home
+              </a>
+            </div>
+          </div>
+        {{else if quizStarted}}
+          <!-- Active quiz question -->
+          <form id="quizForm" action="/quiz/submit" method="POST">
+            <div class="mb-4">
+              <h3 class="h5 mb-3">{{currentQuestionObj.question}}</h3>
+              
+              <div class="list-group">
+                {{#each currentQuestionObj.options}}
+                  <label class="list-group-item list-group-item-action">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="answer" 
+                             value="{{@index}}" id="option{{@index}}" {{#if (eq ../selectedAnswer @index)}}checked{{/if}}>
+                      <span class="ms-2">{{this}}</span>
+                    </div>
+                  </label>
+                {{/each}}
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+              {{#if previousQuestionAvailable}}
+                <a href="/quiz/previous" class="btn btn-outline-secondary">
+                  <i class="fas fa-arrow-left me-2"></i>Previous
+                </a>
+              {{else}}
+                <div></div>
+              {{/if}}
+              
+              <button type="submit" class="btn btn-primary" id="submitAnswer">
+                {{#if isLastQuestion}}
+                  <i class="fas fa-check me-2"></i>Submit Quiz
+                {{else}}
+                  <i class="fas fa-arrow-right me-2"></i>Next Question
+                {{/if}}
+              </button>
+            </div>
+          </form>
+        {{else}}
+          <!-- Quiz start screen -->
+          <div class="text-center py-4">
+            <i class="fas fa-brain text-primary mb-3" style="font-size: 3rem;"></i>
+            <h3>Ready to Test Your Knowledge?</h3>
+            <p>This quiz will test what you've learned about different web storage methods.</p>
+            <p class="mb-4">
+              There are {{totalQuestions}} questions in total, and your progress will be saved
+              in your browser session so you can continue later.
+            </p>
+            
+            <a href="/quiz/start" class="btn btn-primary btn-lg">
+              <i class="fas fa-play me-2"></i>Start Quiz
+            </a>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#if quizStarted}}
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="h5 mb-0">
+            <i class="fas fa-info-circle me-2"></i>Session Information
+          </h2>
+        </div>
+        <div class="card-body">
+          <p>Your quiz progress is being stored in your session. Here's what's being saved:</p>
+          
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Session Data</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Current Question</td>
+                  <td>{{currentQuestion}}</td>
+                </tr>
+                <tr>
+                  <td>Questions Answered</td>
+                  <td>{{answeredCount}}</td>
+                </tr>
+                <tr>
+                  <td>Current Score</td>
+                  <td>{{score}}</td>
+                </tr>
+                <tr>
+                  <td>Session ID</td>
+                  <td><code>{{sessionId}}</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="alert alert-info mt-3">
+            <i class="fas fa-lightbulb me-2"></i>
+            <strong>Try this:</strong> Navigate to another page and then come back to the quiz.
+            Your progress will still be here because it's saved in your session!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}

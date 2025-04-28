@@ -1,0 +1,182 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="themed-jumbotron">
+      <h1 class="display-5">API Integration 🔄</h1>
+      <p class="lead">
+        Learn how websites connect to external services to fetch and display real-time data
+        while using LocalStorage to cache responses and reduce unnecessary requests.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h5 mb-0">What are APIs?</h2>
+      </div>
+      <div class="card-body">
+        <p>
+          <strong>API</strong> stands for Application Programming Interface. It allows different 
+          software systems to communicate with each other.
+        </p>
+        <p>Web APIs typically:</p>
+        <ul>
+          <li>Return data in JSON or XML format</li>
+          <li>Use HTTP methods (GET, POST, etc.) for different operations</li>
+          <li>Require API keys for authentication</li>
+          <li>Have rate limits (maximum number of requests allowed)</li>
+        </ul>
+        <p>For this demo, we'll be using several free, public space-related APIs:</p>
+        <ul>
+          <li><strong>NASA Astronomy Picture of the Day</strong> - Get beautiful space imagery</li>
+          <li><strong>People in Space</strong> - Find out how many people are currently in space</li>
+          <li><strong>ISS Location</strong> - Track the International Space Station's current position</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h5 mb-0">API and LocalStorage</h2>
+      </div>
+      <div class="card-body">
+        <p>When working with APIs, it's a good practice to cache responses in LocalStorage because:</p>
+        <ul>
+          <li>It reduces unnecessary network requests</li>
+          <li>It improves application performance</li>
+          <li>It helps stay within API rate limits</li>
+          <li>It provides offline capabilities</li>
+        </ul>
+        <p>In this demo:</p>
+        <ul>
+          <li>API responses are stored in LocalStorage with timestamps</li>
+          <li>Data is considered "fresh" for 30 minutes</li>
+          <li>You can manually refresh to get new data</li>
+          <li>Clear storage button removes all cached data</li>
+        </ul>
+        <button id="clear-api-data" class="btn btn-warning">
+          <i class="fas fa-trash-alt me-2"></i>
+          Clear Stored Data
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h5 mb-0">API Code Example</h2>
+      </div>
+      <div class="card-body">
+        <p>Here's how we fetch and cache API data:</p>
+        <pre><code>async function fetchSpaceData(endpoint) {
+  // Check if we have fresh data in localStorage
+  const storedData = loadFromLocalStorage(endpoint);
+  if (storedData) {
+    console.log(`Using cached ${endpoint} data`);
+    return storedData.data;
+  }
+  
+  // If no fresh data, fetch from API
+  try {
+    console.log(`Fetching ${endpoint} data from API`);
+    
+    let url;
+    if (endpoint === 'apod') {
+      url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
+    } else if (endpoint === 'people') {
+      url = 'https://api.open-notify.org/astros.json';
+    } else if (endpoint === 'iss') {
+      url = 'https://api.open-notify.org/iss-now.json';
+    }
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // Save to localStorage with timestamp
+    saveToLocalStorage(endpoint, data);
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 mb-4">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0">NASA Astronomy Picture of the Day</h2>
+        <button class="btn btn-sm btn-primary refresh-btn" data-endpoint="apod">
+          <i class="fas fa-sync-alt me-1"></i>
+          Refresh
+        </button>
+      </div>
+      <div class="card-body api-container" id="apod-container">
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3">Loading NASA Astronomy Picture of the Day...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0">People in Space Right Now</h2>
+        <button class="btn btn-sm btn-primary refresh-btn" data-endpoint="people">
+          <i class="fas fa-sync-alt me-1"></i>
+          Refresh
+        </button>
+      </div>
+      <div class="card-body api-container" id="people-container">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3">Loading people in space data...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0">International Space Station Location</h2>
+        <button class="btn btn-sm btn-primary refresh-btn" data-endpoint="iss">
+          <i class="fas fa-sync-alt me-1"></i>
+          Refresh
+        </button>
+      </div>
+      <div class="card-body api-container" id="iss-container">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3">Loading ISS location data...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container for notifications -->
+<div id="toast-container"></div>

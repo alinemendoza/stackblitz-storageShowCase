@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Storage Explorer - {{title}}</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/themes.css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="theme-light">
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-database me-2"></i>
+        Web Storage Explorer
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link {{#if activeHome}}active{{/if}}" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeJson}}active{{/if}}" href="/json">JSON Files</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeSession}}active{{/if}}" href="/session">Sessions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeLocalStorage}}active{{/if}}" href="/local-storage">LocalStorage</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeCookies}}active{{/if}}" href="/cookies">
+              <i class="fas fa-cookie me-1"></i>Cookies
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeApi}}active{{/if}}" href="/api">
+              <i class="fas fa-cloud me-1"></i>API Integration
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeQuiz}}active{{/if}}" href="/quiz">
+              <i class="fas fa-question-circle me-1"></i>Quiz
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/docs" target="_blank">Docs</a>
+          </li>
+        </ul>
+        
+        <!-- Theme switcher will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content Container -->
+  <div class="container mt-4">
+    {{#if message}}
+      <div class="alert alert-{{messageType}} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {{/if}}
+    
+    {{{body}}}
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer mt-5 py-3">
+    <div class="container text-center">
+      <span>© 2023 Web Storage Explorer - Educational Project for 9th Grade Students</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="/js/main.js"></script>
+  <script src="/js/theme-switcher.js"></script>
+  
+  <!-- Page-specific script if specified -->
+  {{#if pageScript}}
+    <script src="/js/{{pageScript}}.js"></script>
+  {{/if}}
+</body>
+</html>

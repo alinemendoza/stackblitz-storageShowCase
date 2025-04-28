@@ -1,0 +1,26 @@
+[
+  {
+    "id": "char_001",
+    "name": "Zephyr",
+    "class": "Mage",
+    "level": 5
+  },
+  {
+    "id": "char_002",
+    "name": "Thorne",
+    "class": "Warrior",
+    "level": 7
+  },
+  {
+    "id": "char_003",
+    "name": "Skylar",
+    "class": "Rogue",
+    "level": 4
+  },
+  {
+    "id": "char_1744212543126",
+    "name": "Ramco",
+    "class": "Warrior",
+    "level": 1
+  }
+]

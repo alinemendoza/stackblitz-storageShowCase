@@ -1,0 +1,162 @@
+<div class="row">
+  <div class="col-12">
+    <div class="themed-jumbotron">
+      <h1 class="mb-4">Session Storage Demo</h1>
+      <p class="lead">
+        Sessions allow a web server to remember information about your visit.
+        Unlike localStorage, session data is stored on the server and typically expires when you close your browser.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-user-circle me-2"></i>Game Profile
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>Create or update your game profile. This information will be stored in your session on the server.</p>
+        
+        {{#if profile}}
+          <div class="card mb-4 code-bg">
+            <div class="card-body">
+              <h3 class="h5 mb-3">Current Profile</h3>
+              <div class="row mb-1">
+                <div class="col-4 fw-bold">Username:</div>
+                <div class="col-8">{{profile.username}}</div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-4 fw-bold">Level:</div>
+                <div class="col-8">{{profile.level}}</div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-4 fw-bold">Experience:</div>
+                <div class="col-8">{{profile.experience}}</div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-4 fw-bold">Last Updated:</div>
+                <div class="col-8">{{profile.lastUpdated}}</div>
+              </div>
+            </div>
+          </div>
+        {{else}}
+          <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-2"></i>No profile saved in your session yet. Create one below!
+          </div>
+        {{/if}}
+        
+        <form action="/session/profile" method="POST">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{#if profile}}{{profile.username}}{{/if}}" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="level" class="form-label">Level (1-50)</label>
+            <input type="number" class="form-control" id="level" name="level" min="1" max="50" value="{{#if profile}}{{profile.level}}{{else}}1{{/if}}" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="experience" class="form-label">Experience Points</label>
+            <input type="number" class="form-control" id="experience" name="experience" min="0" value="{{#if profile}}{{profile.experience}}{{else}}0{{/if}}" required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Save to Session
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-info-circle me-2"></i>Session Information
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>Here's some information about your current session:</p>
+        
+        <div class="mb-4">
+          <h3 class="h5 mb-3">Session ID</h3>
+          <div class="p-3 rounded code-bg">
+            <code>{{sessionId}}</code>
+          </div>
+          <small class="session-note d-block mt-2">This is a unique identifier for your session. It's usually stored as a cookie in your browser.</small>
+        </div>
+        
+        <h3 class="h5 mb-3">How Sessions Work</h3>
+        <ol>
+          <li>When you first visit a website, the server creates a unique session ID for you.</li>
+          <li>This ID is sent to your browser as a cookie.</li>
+          <li>Your browser sends this cookie with every request to the website.</li>
+          <li>The server uses this ID to find your session data.</li>
+          <li>When you close your browser, most session cookies expire, and your session data is eventually deleted.</li>
+        </ol>
+        
+        <div class="alert alert-warning mt-4">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <strong>Try an experiment:</strong> Try refreshing the page or opening this page in a new tab. Your session data will still be there! 
+          But if you close your browser completely and come back, your session will likely be reset.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h5 mb-0">
+          <i class="fas fa-code me-2"></i>How Sessions Work Behind the Scenes
+        </h2>
+      </div>
+      <div class="card-body">
+        <p>Here's a simplified version of how sessions are implemented on a server:</p>
+        
+        <div class="mt-3">
+          <pre class="p-3 rounded"><code>// Express.js server-side code
+app.use(
+  session({
+    secret: 'a-secret-key',    // Used to sign the session ID cookie
+    resave: false,             // Don't save session if unmodified
+    saveUninitialized: true,   // Save new sessions
+    cookie: { maxAge: 3600000 } // Session expires after 1 hour
+  })
+);
+
+// Store data in session
+app.post('/save-data', (req, res) => {
+  req.session.userData = {
+    username: req.body.username,
+    level: req.body.level
+  };
+  res.redirect('/');
+});
+
+// Read data from session
+app.get('/profile', (req, res) => {
+  const userData = req.session.userData || null;
+  res.render('profile', { userData });
+});</code></pre>
+        </div>
+        
+        <p class="mt-3">Key features of sessions:</p>
+        <ul>
+          <li>Data is stored on the server, not in the browser</li>
+          <li>More secure for sensitive information</li>
+          <li>Typically expires when the browser is closed</li>
+          <li>Limited by server storage capacity</li>
+          <li>Can store any type of data (not just strings)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
